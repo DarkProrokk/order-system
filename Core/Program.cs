@@ -1,18 +1,21 @@
+using System.Reflection;
+using Application.Di;
+using Application.Interfaces;
+using Core;
+using Infrastructure.Di;
 using Prometheus;
 using Serilog;
 using Serilog.Context;
-
-
-Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .WriteTo.Console(outputTemplate:
-        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} " +
-        "{Properties:j}{NewLine}{Exception}")
-    .CreateLogger();
+using Serilog.Sinks.PostgreSQL.ColumnWriters;
 
 var builder = WebApplication.CreateBuilder(args);
+Configuration.Configure(builder.Configuration);
+builder.Host.UseSerilog();
 builder.Logging.AddSerilog().SetMinimumLevel(LogLevel.Information);
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+builder.Services.AddInfastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
@@ -23,52 +26,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-    
-app.UseHttpMetrics();
-
-app.MapMetrics();
-Log.Logger.Information("21312");
-app.Use(async (ctx, next) =>
-{
-    using (LogContext.PushProperty("TraceId", ctx.TraceIdentifier))
-    using (LogContext.PushProperty("UserId", ctx.User.Identity?.Name))
-    {
-        await next();
-    }
-});
-app.MapGet("/weatherforecast", () =>
-    {
-        
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        Log.Logger.Information("Weather is @{@weather}", forecast);
-        using (LogContext.PushProperty("A", 1))
-        {
-            Log.Logger.Information("Carries property A = 1");
-
-            using (LogContext.PushProperty("A", 2))
-            using (LogContext.PushProperty("B", 1))
-            {
-                Log.Logger.Information("Carries A = 2 and B = 1");
-            }
-
-            Log.Logger.Information("Carries property A = 1, again");
-        }
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
-
+//app.UseHttpMetrics();
+//app.MapMetrics();
+// app.Use(async (ctx, next) =>
+// {
+//     using (LogContext.PushProperty("TraceId", ctx.TraceIdentifier))
+//     using (LogContext.PushProperty("UserId", ctx.User.Identity?.Name))
+//     {
+//         await next();
+//     }
+// });
+app.UseRouting();
+app.MapControllers();
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
