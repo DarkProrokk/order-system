@@ -10,8 +10,8 @@ using Serilog.Sinks.PostgreSQL.ColumnWriters;
 
 var builder = WebApplication.CreateBuilder(args);
 Configuration.Configure(builder.Configuration);
+//Serilog.Debugging.SelfLog.Enable(Console.Error);
 builder.Host.UseSerilog();
-builder.Logging.AddSerilog().SetMinimumLevel(LogLevel.Information);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddInfastructure(builder.Configuration);
@@ -24,19 +24,11 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
-//app.UseHttpMetrics();
-//app.MapMetrics();
-// app.Use(async (ctx, next) =>
-// {
-//     using (LogContext.PushProperty("TraceId", ctx.TraceIdentifier))
-//     using (LogContext.PushProperty("UserId", ctx.User.Identity?.Name))
-//     {
-//         await next();
-//     }
-// });
 app.UseRouting();
+app.UseHttpsRedirection();
+app.UseHttpMetrics();
+app.MapMetrics();
+
 app.MapControllers();
 app.Run();
 

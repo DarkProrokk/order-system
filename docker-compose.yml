@@ -21,6 +21,19 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     restart: unless-stopped
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgres
+    environment:
+      POSTGRES_PASSWORD: 3X20(u!
+      POSTGRES_USER: postgres
+      POSTGRES_DB: order_service
+
 
 volumes:
   grafana_data:
+  db_data:

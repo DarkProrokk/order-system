@@ -27,7 +27,7 @@ public static class Configuration
             .WriteTo.Console(outputTemplate:
                 "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} " +
                 "{Properties:j}{NewLine}{Exception}")
-            .WriteTo.PostgreSQL(config.GetConnectionString("LogContext"), logTableName, columnWriters)
+            .WriteTo.PostgreSQL(config.GetConnectionString("LogContext"), logTableName, columnWriters, needAutoCreateTable: true, needAutoCreateSchema: true)
             .CreateLogger();
     }
 }
