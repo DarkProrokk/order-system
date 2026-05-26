@@ -1,4 +1,5 @@
-using System.Diagnostics;
+
+using Application.Extensions;
 using Application.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -8,7 +9,7 @@ public class ItemService(IItemRepository repository, ILogger<ItemService> logger
 {
     public void GenerateTestData(int count)
     {
-        using var activity = Activity.Current?.Source.StartActivity($"ItemService.GenerateTestData");
+        using var activity = Trace.StartActivity("ItemService.GenerateTestData");
         logger.LogInformation("Generating {count} items", count);
         // int threads = Environment.ProcessorCount;
         //

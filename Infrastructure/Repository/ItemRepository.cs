@@ -9,7 +9,7 @@ public class ItemRepository(OrderContext context): Repository<Item>(context), II
 {
     public void AddTestData(int count)
     {
-        using var activity = Activity.Current?.Source.StartActivity($"ItemService.GenerateTestData");
+        using var activity = Activity.Current?.Source.StartActivity($"ItemRepository.AddTestData");
         Thread.Sleep(count*100);
         return;
         var random = new Random();

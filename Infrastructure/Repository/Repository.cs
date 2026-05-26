@@ -6,29 +6,30 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repository;
 public class Repository<T>(OrderContext context): IRepository<T> where T : Entity
 {
+    internal readonly DbSet<T> Set = context.Set<T>();
     public void Add(T entity)
     {
-        context.Set<T>().Add(entity);
+        Set.Add(entity);
     }
 
     public T? GetById(int id)
     {
-        return context.Set<T>().Find(id);
+        return Set.Find(id);
     }
 
     public void Update(T entity)
     {
-        context.Set<T>().Update(entity);
+        Set.Update(entity);
     }
 
     public void Delete(T entity)
     {
-        context.Set<T>().Remove(entity);
+        Set.Remove(entity);
     }
 
     public void SoftDelete(T entityToDelete)
     {
-       var entity = context.Set<T>().Find(entityToDelete.Id);
+       var entity = Set.Find(entityToDelete.Id);
        entity?.IsDeleted = true;
     }
     
