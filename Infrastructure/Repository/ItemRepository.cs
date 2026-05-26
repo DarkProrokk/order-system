@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Application.Interfaces;
 using Domain.Entity;
 using Infrastructure.Context;
@@ -8,6 +9,9 @@ public class ItemRepository(OrderContext context): Repository<Item>(context), II
 {
     public void AddTestData(int count)
     {
+        using var activity = Activity.Current?.Source.StartActivity($"ItemService.GenerateTestData");
+        Thread.Sleep(count*100);
+        return;
         var random = new Random();
         for (int i = 1; i <= count; i++)
         {

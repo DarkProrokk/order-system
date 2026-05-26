@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Application.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -7,6 +8,7 @@ public class ItemService(IItemRepository repository, ILogger<ItemService> logger
 {
     public void GenerateTestData(int count)
     {
+        using var activity = Activity.Current?.Source.StartActivity($"ItemService.GenerateTestData");
         logger.LogInformation("Generating {count} items", count);
         // int threads = Environment.ProcessorCount;
         //
@@ -15,8 +17,8 @@ public class ItemService(IItemRepository repository, ILogger<ItemService> logger
         //     new Thread(HeavyWork).Start();
         // }
         Thread.Sleep(100);
-        return;
         repository.AddTestData(count);
+        //activity.Stop();
     }
     
     static void HeavyWork()

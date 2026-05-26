@@ -1,4 +1,5 @@
 using Serilog;
+using Serilog.Context;
 using Serilog.Sinks.PostgreSQL.ColumnWriters;
 
 namespace Core;
@@ -12,6 +13,7 @@ public static class Configuration
 
     public static void ConfigureLogs(IConfiguration config)
     {
+      
         IDictionary<string, ColumnWriterBase> columnWriters = new Dictionary<string, ColumnWriterBase>
         {
             { "timestamp", new TimestampColumnWriter() },

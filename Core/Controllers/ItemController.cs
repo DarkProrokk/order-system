@@ -11,7 +11,7 @@ public class ItemController(IItemService service): ControllerBase
     [Route("test")]
     public IActionResult Test()
     {
-        service.GenerateTestData(100);
+        service.GenerateTestData(10);
         return Ok();
     }
 }

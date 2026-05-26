@@ -21,6 +21,9 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     restart: unless-stopped
+    depends_on:
+      - tempo
+      - prometheus
   db:
     image: postgres
     restart: always
@@ -32,7 +35,26 @@ services:
       POSTGRES_PASSWORD: 3X20(u!
       POSTGRES_USER: postgres
       POSTGRES_DB: order_service
-
+  tempo:
+    image: grafana/tempo:latest
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./tempo.yaml:/etc/tempo.yaml
+    ports:
+      - "3200:3200"   # HTTP API
+      - "9095:9095" 
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-collector.yaml"]
+    volumes:
+      - ./otel-collector.yaml:/etc/otel-collector.yaml
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "8888:8888"   # Metrics коллектора (для self-monitoring)
+    depends_on:
+      - tempo
+      - prometheus
 
 volumes:
   grafana_data:
