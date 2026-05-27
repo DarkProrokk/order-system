@@ -9,5 +9,6 @@ public static class RepositoryDiRegister
     public static IServiceCollection AddRepository(this IServiceCollection services)
     => services
         .AddScoped<IItemRepository, ItemRepository>()
-        .AddScoped<ICartRepository, CartRepository>();
+        .AddScoped<ICartRepository, CartRepository>()
+        .AddScoped<IUserRepository, UserRepository>();
 }

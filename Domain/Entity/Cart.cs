@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Exception;
 
 namespace Domain.Entity;
@@ -5,7 +6,9 @@ namespace Domain.Entity;
 public class Cart: Entity
 {
     public List<CartItem> Items { get; set; } = new List<CartItem>();
-    public User User { get; set; }
+    public User? User { get; set; }
+    
+    public int? UserId { get; set; }
 
     public Cart()
     {
@@ -13,7 +16,7 @@ public class Cart: Entity
 
     public void Add(Item item)
     {
-
+        if (UserId == null) throw new DomainException("cart_with_null_user", "Cannot add an item in cart without user");
         var entity = Items.Find(e => e.Item.Id == item.Id);
         if (entity == null)
         {

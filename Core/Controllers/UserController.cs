@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace Core.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-public class ItemController(IItemService service): ControllerBase
+[Route("user")]
+public class UserController(IUserService userService): ControllerBase
 {
     [HttpGet]
     [Route("test")]
     public IActionResult Test()
     {
-        service.GenerateTestData(100);
+        userService.GenerateTestData();
         return Ok();
     }
 }

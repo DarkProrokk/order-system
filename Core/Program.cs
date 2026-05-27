@@ -14,7 +14,7 @@ using Serilog.Sinks.PostgreSQL.ColumnWriters;
 
 var builder = WebApplication.CreateBuilder(args);
 Configuration.Configure(builder.Configuration);
-//Serilog.Debugging.SelfLog.Enable(Console.Error);
+Serilog.Debugging.SelfLog.Enable(Console.Error);
 builder.Host.UseSerilog();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
@@ -26,7 +26,8 @@ builder.Services.AddOpenTelemetry()
         tracing
             .AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation()
-            .AddConsoleExporter()
+            .AddEntityFrameworkCoreInstrumentation()
+            //.AddConsoleExporter()
             .AddOtlpExporter(opt =>
             {
                 opt.Endpoint = new Uri("http://localhost:4317");
@@ -43,8 +44,8 @@ if (app.Environment.IsDevelopment())
 }
 app.UseRouting();
 app.UseHttpsRedirection();
-//app.UseHttpMetrics();
-//app.MapMetrics();
+app.UseHttpMetrics();
+app.MapMetrics();
 
 app.MapControllers();
 

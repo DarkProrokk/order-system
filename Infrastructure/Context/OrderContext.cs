@@ -11,5 +11,15 @@ public class OrderContext: DbContext
     public DbSet<CartItem> CartItems { get; set; }
     public OrderContext(DbContextOptions<OrderContext> options) : base(options)
     {}
-    
- }
+
+    // protected override void OnModelCreating(ModelBuilder modelBuilder)
+    // {
+    //     modelBuilder.Entity<Cart>(entity => 
+    //         entity
+    //             .HasOne<User>()
+    //             .WithMany()
+    //             .HasForeignKey(cart => cart.UserId)
+    //         );
+    //     base.OnModelCreating(modelBuilder);
+    // }
+}

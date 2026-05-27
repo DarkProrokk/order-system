@@ -7,5 +7,8 @@ namespace Application.Di;
 public static class ApplicationDiRegister
 {
     public static IServiceCollection AddApplication(this IServiceCollection service)
-        => service.AddScoped<IItemService, ItemService>();
+        => service
+            .AddScoped<IItemService, ItemService>()
+            .AddScoped<ICartService, CartService>()
+            .AddScoped<IUserService, UserService>();
 }

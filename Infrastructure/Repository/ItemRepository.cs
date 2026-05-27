@@ -10,8 +10,6 @@ public class ItemRepository(OrderContext context): Repository<Item>(context), II
     public void AddTestData(int count)
     {
         using var activity = Activity.Current?.Source.StartActivity($"ItemRepository.AddTestData");
-        Thread.Sleep(count*100);
-        return;
         var random = new Random();
         for (int i = 1; i <= count; i++)
         {
@@ -21,6 +19,6 @@ public class ItemRepository(OrderContext context): Repository<Item>(context), II
             var item = new Item(price, $"Item {i}");
             Add(item);
         }
-        //SaveChanges();
+        SaveChanges();
     }
 }
