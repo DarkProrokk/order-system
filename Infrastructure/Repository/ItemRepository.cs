@@ -7,7 +7,7 @@ namespace Infrastructure.Repository;
 
 public class ItemRepository(OrderContext context): Repository<Item>(context), IItemRepository
 {
-    public void AddTestData(int count)
+    public async Task AddTestData(int count)
     {
         using var activity = Activity.Current?.Source.StartActivity($"ItemRepository.AddTestData");
         var random = new Random();
@@ -17,8 +17,8 @@ public class ItemRepository(OrderContext context): Repository<Item>(context), II
             var point = (decimal)random.NextDouble();
             price += point;
             var item = new Item(price, $"Item {i}");
-            Add(item);
+            await AddAsync(item);
         }
-        SaveChanges();
+        await SaveChangesAsync();
     }
 }

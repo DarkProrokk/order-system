@@ -4,9 +4,12 @@ namespace Application.Interfaces;
 
 public interface IRepository<T>  where T : Entity
 {
-    public void Add(T entity);
-    public T? GetById(int id);
+    public Task AddAsync(T entity);
+    public Task<T?> GetByIdAsync(int id);
     public void Update(T entity);
-    public void SaveChanges();
+    public Task SaveChangesAsync();
+    
+    public void Delete(T entity);
+    public Task SoftDeleteAsync(T entity);
 }
     

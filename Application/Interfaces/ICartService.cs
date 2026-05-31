@@ -6,5 +6,5 @@ namespace Application.Interfaces;
 
 public interface ICartService
 {
-    public Result<bool> AddItem(AddItemInCartModel model);
+    public Task<Result<bool>> AddItemAsync(AddItemInCartModel model);
 }

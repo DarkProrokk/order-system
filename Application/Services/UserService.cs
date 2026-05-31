@@ -4,8 +4,8 @@ namespace Application.Services;
 
 public class UserService(IUserRepository repository): IUserService
 {
-    public void GenerateTestData()
+    public async Task GenerateTestData(int count)
     {
-        repository.AddTestData(100);
+        await repository.AddTestData(count);
     }
 }

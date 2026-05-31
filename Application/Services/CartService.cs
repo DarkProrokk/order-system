@@ -10,28 +10,28 @@ namespace Application.Services;
 public class CartService(IItemRepository itemRepository, ICartRepository cartRepository, IUserRepository userRepository): ICartService
 
 {
-    public Result<bool> AddItem(AddItemInCartModel model)
+    public async Task<Result<bool>> AddItemAsync(AddItemInCartModel model)
     {
         using var activity = Trace.StartActivity("CartService.AddItem");
         Cart? cart;
-        cart = cartRepository.GetByUserId(model.UserId);
+        cart = await cartRepository.GetByUserIdAsync(model.UserId);
         if (cart is null)
         {
             cart = new Cart
             {
                 UserId = model.UserId
             };
-            cartRepository.Add(cart);
-            cartRepository.SaveChanges();
+            await cartRepository.AddAsync(cart);
+            await cartRepository.SaveChangesAsync();
         }
 
-        var item = itemRepository.GetById(model.ItemId);
+        var item = await itemRepository.GetByIdAsync(model.ItemId);
         if (item == null) return Result<bool>.Failure("Item not found");
-        var result =cartRepository.AddItemInCart(item, cart.Id);
+        var result = await cartRepository.AddItemInCartAsync(item, cart.Id);
         if (result.IsSuccess)
         {
             cartRepository.Update(cart);
-            cartRepository.SaveChanges();
+            await cartRepository.SaveChangesAsync();
         }
 
         return result;

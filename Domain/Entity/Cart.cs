@@ -14,7 +14,7 @@ public class Cart: Entity
     {
     }
 
-    public void Add(Item item)
+    public void Add(Item item, int quantity = 1)
     {
         if (UserId == null) throw new DomainException("cart_with_null_user", "Cannot add an item in cart without user");
         var entity = Items.Find(e => e.Item.Id == item.Id);
@@ -23,6 +23,7 @@ public class Cart: Entity
             var cartItem = new CartItem();
             cartItem.Cart = this;
             cartItem.Item = item;
+            ChangeItemQuantity(item.Id, quantity);
             Items.Add(cartItem);
         }
         else

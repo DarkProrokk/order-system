@@ -4,16 +4,17 @@ using Domain.Entity;
 using Domain.Exception;
 using Domain.Result;
 using Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Repository;
 
 public class CartRepository(OrderContext context, ILogger<CartRepository> logger): Repository<Cart>(context), ICartRepository
 {
-    public Result<bool> AddItemInCart(Item item, int cartId)
+    public async Task<Result<bool>> AddItemInCartAsync(Item item, int cartId)
     {
         using var activity = Trace.StartActivity("CartRepository.AddItemInCart");
-        Cart? currentCart = Set.Find(cartId);
+        Cart? currentCart = await Set.FindAsync(cartId);
         if (currentCart is null) return Result<bool>.Failure(new ArgumentException("Cart cannot be null in this context"));
         try
         {
@@ -28,5 +29,5 @@ public class CartRepository(OrderContext context, ILogger<CartRepository> logger
         return Result<bool>.Success(true);
     }
 
-    public Cart? GetByUserId(int userId) => Set.FirstOrDefault(c => c.User.Id == userId);
+    public async Task<Cart?> GetByUserIdAsync(int userId) => await Set.FirstOrDefaultAsync(c => c.User.Id == userId);
 }

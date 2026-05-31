@@ -2,5 +2,5 @@ namespace Application.Interfaces;
 
 public interface IUserService
 {
-    public void GenerateTestData();
+    public Task GenerateTestData(int count);
 }

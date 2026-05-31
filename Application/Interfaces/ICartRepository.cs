@@ -5,6 +5,6 @@ namespace Application.Interfaces;
 
 public interface ICartRepository: IRepository<Cart>
 {
-    public Result<bool> AddItemInCart(Item item, int cartId);
-    public Cart? GetByUserId(int userId);
+    public Task<Result<bool>> AddItemInCartAsync(Item item, int cartId);
+    public Task<Cart?> GetByUserIdAsync(int userId);
 }

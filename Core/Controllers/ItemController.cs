@@ -9,9 +9,9 @@ public class ItemController(IItemService service): ControllerBase
 {
     [HttpGet]
     [Route("test")]
-    public IActionResult Test()
+    public IActionResult Test([FromQuery] int count)
     {
-        service.GenerateTestData(100);
+        service.GenerateTestData(count);
         return Ok();
     }
 }

@@ -7,14 +7,14 @@ namespace Infrastructure.Repository;
 public class Repository<T>(OrderContext context): IRepository<T> where T : Entity
 {
     internal readonly DbSet<T> Set = context.Set<T>();
-    public void Add(T entity)
+    public async Task AddAsync(T entity)
     {
-        Set.Add(entity);
+        await Set.AddAsync(entity);
     }
 
-    public T? GetById(int id)
+    public async Task<T?> GetByIdAsync(int id)
     {
-        return Set.Find(id);
+        return await  Set.FindAsync(id);
     }
 
     public void Update(T entity)
@@ -27,14 +27,14 @@ public class Repository<T>(OrderContext context): IRepository<T> where T : Entit
         Set.Remove(entity);
     }
 
-    public void SoftDelete(T entityToDelete)
+    public async Task SoftDeleteAsync(T entityToDelete)
     {
-       var entity = Set.Find(entityToDelete.Id);
+       var entity = await Set.FindAsync(entityToDelete.Id);
        entity?.IsDeleted = true;
     }
     
-    public void SaveChanges()
+    public async Task SaveChangesAsync()
     {
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

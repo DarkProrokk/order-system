@@ -11,10 +11,10 @@ public class CartController(ILogger<CartController> logger, ICartService cartSer
 {
     [HttpPost]
     [Route("items")]
-    public IActionResult AddItem(AddItemInCartModel model)
+    public async Task<IActionResult> AddItem(AddItemInCartModel model)
     {
         logger.LogInformation("Receiving request");
-        var result = cartService.AddItem(model);
+        var result = await cartService.AddItemAsync(model);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 }

@@ -20,6 +20,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
     restart: unless-stopped
     depends_on:
       - tempo
@@ -30,7 +32,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - db_data:/var/lib/postgres
+      - db_data:/var/lib/postgresql
     environment:
       POSTGRES_PASSWORD: 3X20(u!
       POSTGRES_USER: postgres
@@ -58,4 +60,6 @@ services:
 
 volumes:
   grafana_data:
+    driver: local
   db_data:
+    driver: local

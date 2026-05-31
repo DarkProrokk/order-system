@@ -9,8 +9,11 @@ public class OrderContext: DbContext
     public DbSet<Item> Items { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
+
     public OrderContext(DbContextOptions<OrderContext> options) : base(options)
-    {}
+    {
+    }
 
     // protected override void OnModelCreating(ModelBuilder modelBuilder)
     // {

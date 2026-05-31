@@ -3,7 +3,9 @@ using Application.Di;
 using Application.Interfaces;
 using Core;
 using Core.Middleware;
+using Infrastructure.Context;
 using Infrastructure.Di;
+using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -36,7 +38,11 @@ builder.Services.AddOpenTelemetry()
             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName:"OrderService"));
     });
 var app = builder.Build();
+var scope = app.Services.CreateScope();
 
+var context = scope.ServiceProvider.GetRequiredService<OrderContext>();
+
+context.Database.EnsureCreated();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

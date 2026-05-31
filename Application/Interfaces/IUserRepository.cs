@@ -4,5 +4,5 @@ namespace Application.Interfaces;
 
 public interface IUserRepository: IRepository<User>
 {
-    public void AddTestData(int count);
+    public Task AddTestData(int count);
 }
