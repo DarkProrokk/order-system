@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Interfaces.Repository;
 using Infrastructure.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,5 +11,7 @@ public static class RepositoryDiRegister
     => services
         .AddScoped<IItemRepository, ItemRepository>()
         .AddScoped<ICartRepository, CartRepository>()
-        .AddScoped<IUserRepository, UserRepository>();
+        .AddScoped<IUserRepository, UserRepository>()
+        .AddScoped<IOrderRepository, OrderRepository>()
+        .AddScoped<IReservationRepository, ReservationRepository>();
 }

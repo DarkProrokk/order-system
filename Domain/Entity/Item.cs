@@ -8,6 +8,8 @@ public class Item: Entity
     public string? Name { get; private set; }
     
     public int Quantity { get; private set; }
+    
+    public byte[] RowVersion { get; private set; }
 
 
     private Item()

@@ -1,7 +1,6 @@
 using Domain.Entity;
-using Domain.Result;
 
-namespace Application.Interfaces;
+namespace Application.Interfaces.Repository;
 
 public interface IItemRepository: IRepository<Item>
 {

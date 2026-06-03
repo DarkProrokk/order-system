@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Services;
 
@@ -10,5 +11,6 @@ public static class ApplicationDiRegister
         => service
             .AddScoped<IItemService, ItemService>()
             .AddScoped<ICartService, CartService>()
-            .AddScoped<IUserService, UserService>();
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IOrderService, OrderService>();
 }

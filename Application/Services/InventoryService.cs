@@ -1,4 +1,6 @@
 using Application.Interfaces;
+using Application.Interfaces.Repository;
+using Application.Interfaces.Services;
 using Application.Model;
 using Domain.Exception;
 using Domain.Result;

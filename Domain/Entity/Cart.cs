@@ -23,8 +23,9 @@ public class Cart: Entity
             var cartItem = new CartItem();
             cartItem.Cart = this;
             cartItem.Item = item;
-            ChangeItemQuantity(item.Id, quantity);
+            cartItem.Quantity = quantity;
             Items.Add(cartItem);
+            
         }
         else
         {

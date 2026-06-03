@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using Application.Interfaces;
+using Application.Interfaces.Repository;
+using Application.Interfaces.Services;
 using Application.Model;
 using Domain.Entity;
 using Domain.Result;
@@ -27,7 +29,7 @@ public class CartService(IItemRepository itemRepository, ICartRepository cartRep
 
         var item = await itemRepository.GetByIdAsync(model.ItemId);
         if (item == null) return Result<bool>.Failure("Item not found");
-        var result = await cartRepository.AddItemInCartAsync(item, cart.Id);
+        var result = await cartRepository.AddItemInCartAsync(item, cart);
         if (result.IsSuccess)
         {
             cartRepository.Update(cart);

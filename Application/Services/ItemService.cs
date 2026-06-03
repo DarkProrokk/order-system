@@ -1,6 +1,8 @@
 
 using Application.Extensions;
 using Application.Interfaces;
+using Application.Interfaces.Repository;
+using Application.Interfaces.Services;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services;

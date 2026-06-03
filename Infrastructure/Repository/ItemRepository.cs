@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Application.Interfaces;
+using Application.Interfaces.Repository;
 using Domain.Entity;
 using Infrastructure.Context;
 
@@ -13,10 +14,11 @@ public class ItemRepository(OrderContext context): Repository<Item>(context), II
         var random = new Random();
         for (int i = 1; i <= count; i++)
         {
+            var quantity = random.Next(1, 1000);
             decimal price = random.Next(1, 100);
             var point = (decimal)random.NextDouble();
             price += point;
-            var item = new Item(price, $"Item {i}");
+            var item = new Item(price, $"Item {i}", quantity);
             await AddAsync(item);
         }
         await SaveChangesAsync();

@@ -1,4 +1,6 @@
 using Application.Interfaces;
+using Application.Interfaces.Repository;
+using Application.Interfaces.Services;
 
 namespace Application.Services;
 

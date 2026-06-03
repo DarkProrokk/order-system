@@ -1,6 +1,6 @@
 using Domain.Result;
 
-namespace Application.Interfaces;
+namespace Application.Interfaces.Services;
 
 public interface IOrderService
 {

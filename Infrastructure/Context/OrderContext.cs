@@ -15,14 +15,13 @@ public class OrderContext: DbContext
     {
     }
 
-    // protected override void OnModelCreating(ModelBuilder modelBuilder)
-    // {
-    //     modelBuilder.Entity<Cart>(entity => 
-    //         entity
-    //             .HasOne<User>()
-    //             .WithMany()
-    //             .HasForeignKey(cart => cart.UserId)
-    //         );
-    //     base.OnModelCreating(modelBuilder);
-    // }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Item>(entity =>
+            {
+                entity.Property(e => e.RowVersion).IsRowVersion();
+            }
+        );
+        base.OnModelCreating(modelBuilder);
+    }
 }
