@@ -19,7 +19,7 @@ public class OrderContext: DbContext
     {
         modelBuilder.Entity<Item>(entity =>
             {
-                entity.Property(e => e.RowVersion).IsRowVersion();
+                entity.Property<uint>("xmin").IsRowVersion();
             }
         );
         base.OnModelCreating(modelBuilder);

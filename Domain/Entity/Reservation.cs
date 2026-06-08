@@ -10,15 +10,27 @@ public class Reservation: Entity
     
     public Order Order { get; set; }
     
+    public int OrderId { get; set; }
+    
     private Reservation()
     {
         
     }
-    public Reservation(List<CartItem> reservedItem, Order order)
+    private Reservation(List<CartItem> reservedItem, Order order)
     {
         ReservedItem = reservedItem;
         CratedAt = DateTime.UtcNow;
         Status = ReservationStatus.Reserved;
         Order = order;
+    }
+
+    public void Cancel()
+    {
+        Status = ReservationStatus.Canceled;
+    }
+
+    public static Reservation CreateFrom(Cart cart, Order order)
+    {
+        return new Reservation(cart.CartItems, order);
     }
 }

@@ -10,7 +10,7 @@ public class ItemRepository(OrderContext context): Repository<Item>(context), II
 {
     public async Task AddTestData(int count)
     {
-        using var activity = Activity.Current?.Source.StartActivity($"ItemRepository.AddTestData");
+        using var activity = Activity.Current?.Source.StartActivity("ItemRepository.AddTestData");
         var random = new Random();
         for (int i = 1; i <= count; i++)
         {
@@ -21,6 +21,5 @@ public class ItemRepository(OrderContext context): Repository<Item>(context), II
             var item = new Item(price, $"Item {i}", quantity);
             await AddAsync(item);
         }
-        await SaveChangesAsync();
     }
 }

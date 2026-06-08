@@ -16,6 +16,5 @@ public class UserRepository(OrderContext context) : Repository<User>(context), I
             var user = new User() {Email = $"testUser{i}@mail.com"};
             await AddAsync(user);
         }
-        await SaveChangesAsync();
     }
 }

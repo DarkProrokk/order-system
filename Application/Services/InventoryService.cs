@@ -1,7 +1,9 @@
+using Application.Extensions;
 using Application.Interfaces;
 using Application.Interfaces.Repository;
 using Application.Interfaces.Services;
 using Application.Model;
+using Domain.Entity;
 using Domain.Exception;
 using Domain.Result;
 
@@ -9,18 +11,29 @@ namespace Application.Services;
 
 public class InventoryService(IItemRepository itemRepository): IInventoryService
 {
-    public async Task<Result<bool>> ReserveItem(ReserveItemModel model)
+    public Result<bool> TryReserve(List<CartItem> cartItems)
     {
-        var item = await itemRepository.GetByIdAsync(model.Item.Id);
-        if(item == null) return Result<bool>.Failure("Item not found");
-        try
+        Trace.StartActivity("InventoryService.Adjust");
+        foreach (var cartItem in cartItems)
         {
-            item.AdjustQuantity(model.Quantity);
+            var result = cartItem.Item.AdjustQuantity(cartItem.Quantity);
+            if (result.IsFailure) return Result<bool>.Failure(result.ErrorMessage);
         }
-        catch (DomainException e)
-        {
-            return Result<bool>.Failure("insufficient_quantity");
-        }
-        return Result<bool>.Success(true);
+        return Result<bool>.Success();
     }
+    // public Result<bool> TryReserve(List<CartItem> cartItems)
+    // {
+    //     if(!CanReserveAllItems(cartItems)) return Result<bool>.Failure("Can't reserve all items");
+    //     return Reserve(cartItems);
+    // }
+    //
+    // private bool CanReserveAllItems(List<CartItem> cartItems)
+    // {
+    //     foreach (var cartItem in cartItems)
+    //     {
+    //         if (!cartItem.Item.CanReserve(cartItem.Quantity)) return false;
+    //     }
+    //
+    //     return true;
+    // }
 }

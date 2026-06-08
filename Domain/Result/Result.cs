@@ -11,7 +11,7 @@ public class Result<T>
     public string ErrorMessage { get; set; }
     
     public bool IsSuccess { get; }
-    public bool IsError => !IsSuccess;
+    public bool IsFailure => !IsSuccess;
     
     private Result(bool isSuccess, T? data = default, System.Exception? error = default, string? errorMessage = default)
     {
@@ -21,7 +21,8 @@ public class Result<T>
         ErrorMessage = errorMessage;
     }
 
-    public static Result<T> Success(T data) => new Result<T>(true, data);
+    public static Result<T> Success(T? data = default) => new Result<T>(true, data);
     public static Result<T> Failure(System.Exception error) => new Result<T>(false, default, error);
     public static Result<T> Failure(string errorMessage) => new Result<T>(true, default, null, errorMessage);
+    public static Result<T> Failure(T data, string errorMessage) => new Result<T>(true, data, null, errorMessage);
 }

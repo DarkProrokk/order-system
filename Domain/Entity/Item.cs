@@ -8,9 +8,6 @@ public class Item: Entity
     public string? Name { get; private set; }
     
     public int Quantity { get; private set; }
-    
-    public byte[] RowVersion { get; private set; }
-
 
     private Item()
     {
@@ -26,9 +23,16 @@ public class Item: Entity
         Quantity = quantity;
     }
 
-    public void AdjustQuantity(int quantity)
+    public Result.Result<Item> AdjustQuantity(int quantity)
     {
-        if(Quantity + quantity < 0) throw new DomainException("insufficient_quantity", "Resulting quantity cannot be negative");
-        Quantity += quantity;
+        if (Quantity - quantity < 0) return Result.Result<Item>.Failure(this, "Item out of stock");
+        Quantity -= quantity;
+        return Result.Result<Item>.Success();
+    }
+
+    public bool CanReserve(int quntity)
+    {
+        var result = Quantity - quntity;
+        return result < 0;
     }
 }

@@ -9,7 +9,7 @@ using Trace = Application.Extensions.Trace;
 
 namespace Application.Services;
 
-public class CartService(IItemRepository itemRepository, ICartRepository cartRepository, IUserRepository userRepository): ICartService
+public class CartService(IItemRepository itemRepository, ICartRepository cartRepository, IUserRepository userRepository, IUnitOfWork uow): ICartService
 
 {
     public async Task<Result<bool>> AddItemAsync(AddItemInCartModel model)
@@ -24,7 +24,7 @@ public class CartService(IItemRepository itemRepository, ICartRepository cartRep
                 UserId = model.UserId
             };
             await cartRepository.AddAsync(cart);
-            await cartRepository.SaveChangesAsync();
+            await uow.SaveChangesAsync();
         }
 
         var item = await itemRepository.GetByIdAsync(model.ItemId);
@@ -33,7 +33,7 @@ public class CartService(IItemRepository itemRepository, ICartRepository cartRep
         if (result.IsSuccess)
         {
             cartRepository.Update(cart);
-            await cartRepository.SaveChangesAsync();
+            await uow.SaveChangesAsync();
         }
 
         return result;

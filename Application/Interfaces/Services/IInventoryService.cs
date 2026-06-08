@@ -1,9 +1,10 @@
 using Application.Model;
+using Domain.Entity;
 using Domain.Result;
 
 namespace Application.Interfaces.Services;
 
 public interface IInventoryService
 {
-    public Task<Result<bool>> ReserveItem(ReserveItemModel model);
+    public Result<bool> TryReserve(List<CartItem> items);
 }

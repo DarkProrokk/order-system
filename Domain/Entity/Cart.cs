@@ -5,7 +5,7 @@ namespace Domain.Entity;
 
 public class Cart: Entity
 {
-    public List<CartItem> Items { get; set; } = new List<CartItem>();
+    public List<CartItem> CartItems { get; set; } = new List<CartItem>();
     public User? User { get; set; }
     
     public int? UserId { get; set; }
@@ -17,14 +17,14 @@ public class Cart: Entity
     public void Add(Item item, int quantity = 1)
     {
         if (UserId == null) throw new DomainException("cart_with_null_user", "Cannot add an item in cart without user");
-        var entity = Items.Find(e => e.Item.Id == item.Id);
+        var entity = CartItems.Find(e => e.Item.Id == item.Id);
         if (entity == null)
         {
             var cartItem = new CartItem();
             cartItem.Cart = this;
             cartItem.Item = item;
             cartItem.Quantity = quantity;
-            Items.Add(cartItem);
+            CartItems.Add(cartItem);
             
         }
         else
@@ -43,7 +43,7 @@ public class Cart: Entity
     public void Remove(int itemId)
     {
         var item = GetCartItemById(itemId);
-        Items.Remove(item);
+        CartItems.Remove(item);
     }
     /// <summary>
     /// Find <see cref="CartItem"/> by <see cref="Item"/> id
@@ -53,9 +53,15 @@ public class Cart: Entity
     /// <exception cref="DomainException">Throw if item not contains in cart</exception>
     public CartItem GetCartItemById(int itemId)
     {
-        var item = Items.Find(item => item.Id == itemId);
+        var item = CartItems.Find(item => item.Id == itemId);
         if (item == null) throw new DomainException("not_found_cart_item", $"Item with id {itemId} not found in " +
                                                                            $"cart with id : {Id}");
         return item;
+    }
+
+    public Result.Result<string> ValidateForOrder()
+    {
+        if(CartItems.Count == 0) return Result.Result<string>.Failure("Cart is empty");
+        return  Result.Result<string>.Success("Cart is valid");
     }
 }

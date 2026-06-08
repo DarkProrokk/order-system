@@ -28,5 +28,5 @@ public class CartRepository(OrderContext context, ILogger<CartRepository> logger
         return Result<bool>.Success(true);
     }
 
-    public async Task<Cart?> GetByUserIdAsync(int userId) => await Set.Include(c => c.Items).ThenInclude(i => i.Item).FirstOrDefaultAsync(c => c.User.Id == userId);
+    public async Task<Cart?> GetByUserIdAsync(int userId) => await Set.Include(c => c.CartItems).ThenInclude(i => i.Item).FirstOrDefaultAsync(c => c.User.Id == userId);
 }

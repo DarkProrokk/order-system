@@ -8,7 +8,7 @@ public class Order: Entity
     public DateTime CreatedAt { get; set; }
     public User User { get; set; }
     
-    public OrderStatus OrderStatus { get; set; }
+    public OrderStatus OrderStatus { get; private set; }
     
     private Order() {}
 
@@ -16,5 +16,15 @@ public class Order: Entity
     {
         Items = items;
         User = user;
+    }
+
+    public void Cancel()
+    {
+        OrderStatus = OrderStatus.Canceled;
+    }
+
+    public static Order CreateFrom(Cart cart, User user)
+    {
+        return new Order(cart.CartItems, user);
     }
 }
