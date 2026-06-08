@@ -4,21 +4,20 @@ namespace Domain.Entity;
 
 public class Reservation: Entity
 {
-    public List<CartItem> ReservedItem { get; set; }
+    public List<CartItem> ReservedItems { get; set; }
     public DateTime CratedAt { get; set; }
     public ReservationStatus Status { get; set; }
     
-    public Order Order { get; set; }
-    
     public int OrderId { get; set; }
+    public Order Order { get; set; }
     
     private Reservation()
     {
         
     }
-    private Reservation(List<CartItem> reservedItem, Order order)
+    private Reservation(Order order)
     {
-        ReservedItem = reservedItem;
+        ReservedItems = order.Items;
         CratedAt = DateTime.UtcNow;
         Status = ReservationStatus.Reserved;
         Order = order;
@@ -29,8 +28,8 @@ public class Reservation: Entity
         Status = ReservationStatus.Canceled;
     }
 
-    public static Reservation CreateFrom(Cart cart, Order order)
+    public static Reservation CreateFrom(Order order)
     {
-        return new Reservation(cart.CartItems, order);
+        return new Reservation(order);
     }
 }

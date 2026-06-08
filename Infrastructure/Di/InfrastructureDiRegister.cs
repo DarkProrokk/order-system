@@ -12,5 +12,6 @@ public static class InfrastructureDiRegister
     public static IServiceCollection AddInfastructure(this IServiceCollection services, IConfiguration configuration) =>
         services
             .AddDbContext<OrderContext>(options => options.UseNpgsql(configuration.GetConnectionString("OrderContext")))
-            .AddRepository();
+            .AddRepository()
+            .AddScoped<IUnitOfWork, UnitOfWork>();
 }

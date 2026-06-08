@@ -7,5 +7,5 @@ namespace Infrastructure.Repository;
 
 public class OrderRepository(OrderContext context) : Repository<Order>(context), IOrderRepository
 {
-    
+
 }

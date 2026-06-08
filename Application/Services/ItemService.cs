@@ -3,6 +3,7 @@ using Application.Extensions;
 using Application.Interfaces;
 using Application.Interfaces.Repository;
 using Application.Interfaces.Services;
+using Application.Model;
 using Domain.Entity;
 using Domain.Result;
 using Microsoft.Extensions.Logging;
@@ -20,9 +21,14 @@ public class ItemService(IItemRepository repository, ILogger<ItemService> logger
         await uow.SaveChangesAsync();
         //activity.Stop();
     }
-
+    
     public Task<Result<List<Item>>> GetAll()
     {
-        
+        throw new NotImplementedException();
+    }
+
+    public Task<List<Item>> GetAsync(ItemFilterPagingModel model)
+    {
+        return repository.GetFilteredItem(model);
     }
 }

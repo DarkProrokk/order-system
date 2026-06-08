@@ -10,7 +10,7 @@ public class ReservationExpirationService(IReservationRepository reservationRepo
 {
     public async Task ProcessExpiredReservation()
     {
-        Trace.StartActivity("ReservationExpirationService.ProcessExpiredReservation");
+        using var activity = Trace.StartActivity("ReservationExpirationService.ProcessExpiredReservation");
         logger.LogInformation("Starting expired reservation process");
         var expiredReservations = await reservationRepository.GetExpiredReservations();
         foreach (var expiredReservation in expiredReservations)

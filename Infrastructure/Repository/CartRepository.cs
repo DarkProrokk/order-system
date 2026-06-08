@@ -12,17 +12,17 @@ namespace Infrastructure.Repository;
 
 public class CartRepository(OrderContext context, ILogger<CartRepository> logger): Repository<Cart>(context), ICartRepository
 {
-    public async Task<Result<bool>> AddItemInCartAsync(Item item, Cart cart)
+    public async Task<Result<bool>> AddItemInCartAsync(Item item, Cart cart, int quantity)
     {
         using var activity = Trace.StartActivity("CartRepository.AddItemInCart");
         try
         {
-            cart.Add(item);
+            cart.Add(item, quantity);
         }
         catch (DomainException e)
         {
             logger.LogError("Occured error while adding {item} in {cart}. Error: {error}", item, cart, e);
-            return Result<bool>.Failure(e);
+            return Result<bool>.Failure(e.Message);
         }
 
         return Result<bool>.Success(true);

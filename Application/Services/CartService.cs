@@ -29,7 +29,7 @@ public class CartService(IItemRepository itemRepository, ICartRepository cartRep
 
         var item = await itemRepository.GetByIdAsync(model.ItemId);
         if (item == null) return Result<bool>.Failure("Item not found");
-        var result = await cartRepository.AddItemInCartAsync(item, cart);
+        var result = await cartRepository.AddItemInCartAsync(item, cart, model.Quantity);
         if (result.IsSuccess)
         {
             cartRepository.Update(cart);

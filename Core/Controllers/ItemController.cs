@@ -1,5 +1,5 @@
-using Application.Interfaces;
 using Application.Interfaces.Services;
+using Application.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Core.Controllers;
@@ -14,5 +14,11 @@ public class ItemController(IItemService service): ControllerBase
     {
         service.GenerateTestData(count);
         return Ok();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] ItemQueryDto dto)
+    {
+        return Ok(await service.GetAsync(dto.Map()));
     }
 }

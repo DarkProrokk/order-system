@@ -1,14 +1,12 @@
-using Application.Extensions;
 using Application.Interfaces;
 using Infrastructure.Context;
 
-namespace Infrastructure.Repository;
+namespace Infrastructure;
 
 public class UnitOfWork(OrderContext context): IUnitOfWork
 {
     public async Task SaveChangesAsync()
     {
-        using var activity = Trace.StartActivity("UnitOfWork.SaveChangesAsync");
         await context.SaveChangesAsync();
     }
 }

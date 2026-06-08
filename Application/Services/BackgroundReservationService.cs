@@ -1,11 +1,26 @@
+using Application.Interfaces.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Application.Services;
 
-public class BackgroundReservationService: BackgroundService
+public class BackgroundReservationService(IServiceScopeFactory scopeFactory): BackgroundService
 {
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected async override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        throw new NotImplementedException();
+        while (true)
+        {
+            // Console.WriteLine("123123123");
+            // var scope = scopeFactory.CreateScope();
+            // IReservationService reservationService = scope.ServiceProvider.GetRequiredService<IReservationService>();
+            // var expiredReservations = await reservationService.GetExpired();
+            // foreach (var reservation in expiredReservations.Data)
+            // {
+            //     await reservationService.Cancel(reservation);
+            // }
+            //
+            //
+            // await Task.Delay(TimeSpan.FromSeconds(20));
+        }
     }
 }

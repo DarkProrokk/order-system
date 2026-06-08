@@ -12,7 +12,7 @@ public class ReservationRepository(OrderContext context) : Repository<Reservatio
 {
     public async Task<List<Reservation>> GetExpiredReservations()
     {
-        Trace.StartActivity("ReservatinRepository.GetExpiredReservations");
+        using var activity = Trace.StartActivity("ReservatinRepository.GetExpiredReservations");
         return await Set.Where(r =>
             r.Status == ReservationStatus.Reserved && r.CratedAt <= DateTime.UtcNow - TimeSpan.FromMinutes(30)).ToListAsync();
     }

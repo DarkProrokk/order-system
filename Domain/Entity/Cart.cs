@@ -29,7 +29,7 @@ public class Cart: Entity
         }
         else
         {
-            ChangeItemQuantity(entity.Id, entity.Quantity+1);
+            ChangeItemQuantity(entity.Id, entity.Quantity+quantity);
         }
     }
 
@@ -59,9 +59,9 @@ public class Cart: Entity
         return item;
     }
 
-    public Result.Result<string> ValidateForOrder()
+    public Result.Result<bool> ValidateForOrder()
     {
-        if(CartItems.Count == 0) return Result.Result<string>.Failure("Cart is empty");
-        return  Result.Result<string>.Success("Cart is valid");
+        if(CartItems.Count == 0) return Result.Result<bool>.Failure("Cart is empty");
+        return  Result.Result<bool>.Success();
     }
 }

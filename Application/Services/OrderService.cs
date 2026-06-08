@@ -2,52 +2,51 @@ using Application.Extensions;
 using Application.Interfaces;
 using Application.Interfaces.Repository;
 using Application.Interfaces.Services;
+using Application.Validators;
 using Domain.Entity;
 using Domain.Result;
 using Microsoft.Extensions.Logging;
+using static Domain.Result.Result<bool>;
 
 namespace Application.Services;
 
-public class OrderService(ICartRepository cartRepository, IUserRepository userRepository, 
+public class OrderService(IOrderContextLoader contextLoader, 
     IOrderRepository orderRepository, 
-    IReservationRepository reservationRepository,
-    ILogger<OrderService> logger, IItemRepository itemRepository,
-    IInventoryService inventoryService,
+    IReservationService reservationService,
+    ILogger<OrderService> logger,
     IUnitOfWork uow): IOrderService
 {
-    public async Task<Result<string>> CreateOrder(int userId)
+    public async Task<Result<bool>> CreateOrder(int userId)
     {
-        Trace.StartActivity("OrderService.CreateOrder");
+        using var activity = Trace.StartActivity("OrderService.CreateOrder");
         logger.LogInformation("Starting create order");
-        var user = await userRepository.GetByIdAsync(userId);
-        if (user == null)
-        {
-            logger.LogWarning("user {userId} not found", userId);
-            return Result<string>.Failure("User not found");
-        }
-        var cart = await cartRepository.GetByUserIdAsync(userId);
-        if (cart == null)
-        {
-            logger.LogWarning("Cart not found for user {UserId}", userId);
-            return Result<string>.Failure("Cart not found");
-        }
-        var validateResult = cart.ValidateForOrder();
-        if (validateResult.IsFailure) return validateResult;
+        var orderContext = await contextLoader.Load(userId);
         
-        var order = Order.CreateFrom(cart, user);
-        var reservation = Reservation.CreateFrom(cart, order);
+        if (orderContext.IsFailure) 
+            return Failure(orderContext.ErrorMessage); 
         
-        var result = inventoryService.TryReserve(cart.CartItems);
-        if (result.IsFailure) 
-            return Result<string>.Failure(result.ErrorMessage);
+        var validateResult = OrderCreateValidator.Validate(orderContext.Value!.cart);
+        if (validateResult.IsFailure) 
+            return validateResult;
         
-        await reservationRepository.AddAsync(reservation);
+        var order = Order.CreateFrom(orderContext.Value.cart, orderContext.Value.user);
+        var reservationResult = await reservationService.ReserveAsync(order);
+        
+        if (reservationResult.IsFailure) 
+            return Failure(reservationResult.ErrorMessage);
+        orderContext.Value.cart.CartItems.Clear();
         await orderRepository.AddAsync(order);
         await uow.SaveChangesAsync();
+        
         logger.LogInformation(
             "Order created for user {UserId}, items count {ItemsCount}",
             userId,
-            cart.CartItems.Count);
-        return Result<string>.Success("Order created");
+            orderContext.Value.cart.CartItems.Count);
+        return Success();
+    }
+
+    public Task<Result<bool>> CancelOrder(int orderId)
+    {
+        throw new NotImplementedException();
     }
 }
