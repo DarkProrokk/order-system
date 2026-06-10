@@ -13,14 +13,14 @@ namespace Application.Services;
 
 public class InventoryService(IItemRepository itemRepository): IInventoryService
 {
-    public Result<List<AdjustmentItem>> TryReserve(List<CartItem> cartItems)
+    public async Task<Result<List<AdjustmentItem>>> TryReserve(List<OrderItem> orderItems)
     {
         using var activity = Trace.StartActivity("InventoryService.Adjust");
         var adjustmentItems = new List<AdjustmentItem>();
         var outOfStockItems = new List<AdjustmentItem>();
-        foreach (var cartItem in cartItems)
+        foreach (var cartItem in orderItems)
         {
-            var item = cartItem.Item;
+            var item = await itemRepository.GetByIdAsync(cartItem.ItemId);
             var tempItem = new AdjustmentItem(item.Id, item.Quantity);
             if (item.Quantity < cartItem.Quantity)
             {

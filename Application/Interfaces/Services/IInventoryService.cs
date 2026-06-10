@@ -7,5 +7,5 @@ namespace Application.Interfaces.Services;
 
 public interface IInventoryService
 {
-    public Result<List<AdjustmentItem>> TryReserve(List<CartItem> items);
+    public Task<Result<List<AdjustmentItem>>> TryReserve(List<OrderItem> orderItems);
 }

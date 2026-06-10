@@ -1,4 +1,5 @@
 using Domain.Enum;
+using Domain.Extensions;
 using Domain.Result;
 
 namespace Domain.Entity;
@@ -31,7 +32,7 @@ public class Reservation: Entity
     
     private Reservation(Order order)
     {
-        ReservedItems = order.Items;
+        ReservedItems = order.Items?.MapToReservationItem();
         CratedAt = DateTime.UtcNow;
         Status = ReservationStatus.Reserved;
         Order = order;

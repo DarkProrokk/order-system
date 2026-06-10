@@ -2,6 +2,7 @@ using Application.Extensions;
 using Application.Interfaces.Repository;
 using Application.Interfaces.Services;
 using Domain.Entity;
+using Domain.Extensions;
 using Domain.Result;
 using static Domain.Result.Result<bool>;
 
@@ -12,7 +13,7 @@ public class ReservationService(IInventoryService inventoryService, IReservation
     public async Task<Result<Reservation>> ReserveAsync(Order order)
     {
         using var activity = Trace.StartActivity("ReservationService.ReserveAsync");
-        var itemReserveResult = inventoryService.TryReserve(order.Items);
+        var itemReserveResult = await inventoryService.TryReserve(order.Items);
         if (itemReserveResult.IsFailure) return Result<Reservation>.Failure(itemReserveResult.ErrorMessage);
         foreach (var adjustmentItem in itemReserveResult.Value!)
         {

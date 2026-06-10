@@ -5,7 +5,7 @@ namespace Domain.Entity;
 
 public class Order: Entity
 {
-    public List<OrderItem>? Items { get; set; }
+    public List<OrderItem>? Items { get; set; } = new List<OrderItem>();
     public DateTime CreatedAt { get; set; }
     public User User { get; set; }
     
@@ -13,10 +13,18 @@ public class Order: Entity
     
     private Order() {}
 
-    public Order(List<OrderItem> items, User user)
+    private Order(List<OrderItem> items, User user)
     {
         Items = items;
         User = user;
+        Status = OrderStatus.Created;
+    }
+    
+    private Order(OrderItem item, User user)
+    {
+        Items  = new List<OrderItem> {item};
+        User = user;
+        Status = OrderStatus.Created;
     }
 
     public void Cancel()
@@ -27,6 +35,11 @@ public class Order: Entity
     public static Order CreateFrom(List<OrderItem> orderItems, User user)
     {
         return new Order(orderItems, user);
+    }
+    
+    public static Order CreateFrom(OrderItem orderItem, User user)
+    {
+        return new Order(orderItem, user);
     }
 
     public Result.Result ChangeStatus(OrderStatus newStatus)

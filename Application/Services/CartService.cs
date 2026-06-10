@@ -19,10 +19,7 @@ public class CartService(IItemRepository itemRepository, ICartRepository cartRep
         cart = await cartRepository.GetByUserIdAsync(model.UserId);
         if (cart is null)
         {
-            cart = new Cart
-            {
-                UserId = model.UserId
-            };
+            cart = Cart.Create(model.UserId);
             await cartRepository.AddAsync(cart);
             await uow.SaveChangesAsync();
         }

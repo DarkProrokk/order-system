@@ -4,21 +4,40 @@ namespace Domain.Extensions;
 
 public static class OrderItemExtensions
 {
-    public static ReservationItem MapToOrderItem(this OrderItem orderItem)
+    public static ReservationItem MapToReservationItem(this OrderItem orderItem)
     {
-        return ReservationItem.Create(orderItem.Item, orderItem.Quantity);
+        return ReservationItem.Create(orderItem.ItemId, orderItem.Quantity);
     }
     
-    public static List<OrderItem> MapToOrderItem(this List<CartItem> cartItems)
+    public static List<ReservationItem> MapToReservationItem(this List<OrderItem> orderItems)
     {
-        List<OrderItem> orderItems = new List<OrderItem>();
+        List<ReservationItem> reservationItems = new List<ReservationItem>();
 
-        foreach (var cartItem in cartItems)
+        foreach (var orderItem in orderItems)
         {
-            orderItems.Add(cartItem.MapToOrderItem());
+            reservationItems.Add(orderItem.MapToReservationItem());
         }
 
-        return orderItems;
+        return reservationItems;
+    }
+
+
+    public static CartItem MapToCartItem(this OrderItem orderItem, Cart cart)
+    {
+        return CartItem.Create(cart, orderItem.ItemId, orderItem.Quantity);
+    }
+    
+    
+    public static List<CartItem> MapToCartItem(this List<OrderItem> orderItems, Cart cart)
+    {
+        List<CartItem> cartItems = new List<CartItem>();
+
+        foreach (var orderItem in orderItems)
+        {
+            cartItems.Add(orderItem.MapToCartItem(cart));
+        }
+
+        return cartItems;
     }
 
 }

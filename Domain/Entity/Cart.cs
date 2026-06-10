@@ -10,9 +10,12 @@ public class Cart: Entity
     
     public int? UserId { get; set; }
 
-    public Cart()
+    private Cart(int userId)
     {
+        UserId = userId;
     }
+
+    public static Cart Create(int userId) => new Cart(userId);
 
     public void Add(Item item, int quantity = 1)
     {
@@ -46,7 +49,7 @@ public class Cart: Entity
     /// <exception cref="DomainException">Throw if item not contains in cart</exception>
     public CartItem GetCartItemById(int itemId)
     {
-        var item = CartItems.Find(item => item.Id == itemId);
+        var item = CartItems.Find(item => item.ItemId == itemId);
         if (item == null) throw new DomainException("not_found_cart_item", $"Item with id {itemId} not found in " +
                                                                            $"cart with id : {Id}");
         return item;
