@@ -4,9 +4,9 @@ namespace Domain.Entity;
 
 public class Item: Entity
 {
-    public decimal Price { get; private set; }
-    public string? Name { get; private set; }
-    public int Quantity { get; private set; }
+    public decimal Price { get; set; }
+    public string? Name { get; set; }
+    public int Quantity { get;  set; }
 
     private Item()
     {
@@ -31,10 +31,18 @@ public class Item: Entity
 
     public Result.Result<bool> ReduceStock(int quantity)
     {
-        if(quantity <= 0) 
+        if(quantity < 0) 
             throw new DomainException("invalid_quantity", "Quantity must be greater than zero");
         if (Quantity - quantity < 0) return Result.Result<bool>.Failure("Item out of stock");
         Quantity -= quantity;
+        return Result.Result<bool>.Success();
+    }
+    
+    public Result.Result<bool> IncreaseStock(int quantity)
+    {
+        if(quantity < 0) 
+            throw new DomainException("invalid_quantity", "Quantity must be greater than zero");
+        Quantity += quantity;
         return Result.Result<bool>.Success();
     }
 

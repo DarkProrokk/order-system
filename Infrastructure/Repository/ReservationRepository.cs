@@ -16,4 +16,9 @@ public class ReservationRepository(OrderContext context) : Repository<Reservatio
         return await Set.Where(r =>
             r.Status == ReservationStatus.Reserved && r.CratedAt <= DateTime.UtcNow - TimeSpan.FromMinutes(30)).ToListAsync();
     }
+
+    public async Task<Reservation?> GetByOrderId(int orderId)
+    {
+        return await Set.FirstOrDefaultAsync(r => r.OrderId == orderId);
+    }
 }

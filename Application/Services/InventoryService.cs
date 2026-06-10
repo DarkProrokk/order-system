@@ -17,15 +17,24 @@ public class InventoryService(IItemRepository itemRepository): IInventoryService
     {
         using var activity = Trace.StartActivity("InventoryService.Adjust");
         var adjustmentItems = new List<AdjustmentItem>();
+        var outOfStockItems = new List<AdjustmentItem>();
         foreach (var cartItem in cartItems)
         {
             var item = cartItem.Item;
-            if (item.Quantity < cartItem.Quantity) 
-                return Failure("Out of stock");
-            adjustmentItems.Add(new AdjustmentItem(item.Id, item.Quantity));
+            var tempItem = new AdjustmentItem(item.Id, item.Quantity);
+            if (item.Quantity < cartItem.Quantity)
+            {
+                outOfStockItems.Add(tempItem);
+            }
+            else
+            {
+                adjustmentItems.Add(tempItem);     
+            }
+            
             // var result = cartItem.Item.AdjustQuantity(cartItem.Quantity);
             // if (result.IsFailure) return Result<bool>.Failure(result.ErrorMessage);
         }
+        if(outOfStockItems.Any()) return Failure(outOfStockItems, "Some items out of stock");
         return Success(adjustmentItems);
     }
     // public Result<bool> TryReserve(List<CartItem> cartItems)

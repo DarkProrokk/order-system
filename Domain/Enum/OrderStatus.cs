@@ -3,7 +3,7 @@ namespace Domain.Enum;
 public enum OrderStatus
 {
     Created,
-    Canceled,
-    Payed,
+    Paid,
     Delivered,
+    Canceled,
 }

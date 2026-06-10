@@ -1,10 +1,11 @@
 using Domain.Enum;
+using Domain.Result;
 
 namespace Domain.Entity;
 
 public class Reservation: Entity
 {
-    public List<CartItem> ReservedItems { get; set; }
+    public List<ReservationItem> ReservedItems { get; set; }
     public DateTime CratedAt { get; set; }
     public ReservationStatus Status { get; set; }
     
@@ -15,6 +16,19 @@ public class Reservation: Entity
     {
         
     }
+
+    public Result<bool> ChangeStatus(ReservationStatus status)
+    {
+        if (Status == ReservationStatus.Completed) return Result<bool>.Failure("Cannot change " +
+                                                                               "status for completed reservation");
+        
+        
+        if (status == ReservationStatus.Canceled) return Result<bool>.Failure("Cannot change " +
+                                                                              "status for canceled reservation");
+        Status = status;
+        return Result<bool>.Success();
+    }
+    
     private Reservation(Order order)
     {
         ReservedItems = order.Items;
@@ -23,9 +37,15 @@ public class Reservation: Entity
         Order = order;
     }
 
-    public void Cancel()
+    public Result<bool> Cancel()
     {
-        Status = ReservationStatus.Canceled;
+        var changeStatusResult = ChangeStatus(ReservationStatus.Canceled);
+        if  (changeStatusResult.IsFailure) return changeStatusResult;
+        foreach (var reservationItem in ReservedItems)
+        {
+            reservationItem.Item.IncreaseStock(reservationItem.Quantity);
+        }
+        return Result<bool>.Success();
     }
 
     public static Reservation CreateFrom(Order order)

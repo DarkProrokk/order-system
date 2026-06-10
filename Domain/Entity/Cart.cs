@@ -20,10 +20,7 @@ public class Cart: Entity
         if (entity != null) ChangeItemQuantity(entity.Id, entity.Quantity+quantity);
         else
         {
-            var cartItem = new CartItem();
-            cartItem.Cart = this;
-            cartItem.Item = item;
-            cartItem.Quantity = quantity;
+            var cartItem = CartItem.Create(this,item, quantity);
             CartItems.Add(cartItem);
             
         }

@@ -4,9 +4,10 @@ using Application.Interfaces.Repository;
 using Application.Interfaces.Services;
 using Application.Validators;
 using Domain.Entity;
+using Domain.Extensions;
 using Domain.Result;
 using Microsoft.Extensions.Logging;
-using static Domain.Result.Result<bool>;
+using static Domain.Result.Result;
 
 namespace Application.Services;
 
@@ -16,7 +17,7 @@ public class OrderService(IOrderContextLoader contextLoader,
     ILogger<OrderService> logger,
     IUnitOfWork uow): IOrderService
 {
-    public async Task<Result<bool>> CreateOrder(int userId)
+    public async Task<Result> CreateOrder(int userId)
     {
         using var activity = Trace.StartActivity("OrderService.CreateOrder");
         logger.LogInformation("Starting create order");
@@ -29,7 +30,7 @@ public class OrderService(IOrderContextLoader contextLoader,
         if (validateResult.IsFailure) 
             return validateResult;
         
-        var order = Order.CreateFrom(orderContext.Value.cart, orderContext.Value.user);
+        var order = Order.CreateFrom(orderContext.Value.cart.CartItems.MapToOrderItem(), orderContext.Value.user);
         var reservationResult = await reservationService.ReserveAsync(order);
         
         if (reservationResult.IsFailure) 
@@ -45,8 +46,14 @@ public class OrderService(IOrderContextLoader contextLoader,
         return Success();
     }
 
-    public Task<Result<bool>> CancelOrder(int orderId)
+    public async Task<Result> CancelOrder(int orderId)
     {
-        throw new NotImplementedException();
+        var order = await orderRepository.GetByIdAsync(orderId);
+        if(order is null) return Failure($"Order - {orderId} not found");
+
+        var cancelReservationResult = await reservationService.CancelReservationByOrderId(orderId);
+        if (cancelReservationResult.IsFailure) return cancelReservationResult;
+        
+        return Success();
     }
 }

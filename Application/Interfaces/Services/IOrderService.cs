@@ -5,6 +5,6 @@ namespace Application.Interfaces.Services;
 
 public interface IOrderService
 {
-    public Task<Result<bool>> CreateOrder(int userId);
-    public Task<Result<bool>> CancelOrder(int orderId);
+    public Task<Result> CreateOrder(int userId);
+    public Task<Result> CancelOrder(int orderId);
 }

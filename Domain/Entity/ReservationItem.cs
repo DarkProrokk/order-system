@@ -2,23 +2,21 @@ using Domain.Exception;
 
 namespace Domain.Entity;
 
-public class CartItem: Entity
+public class ReservationItem
 {
-    public Cart Cart { get; set; }
     public Item Item { get; set; }
     public int Quantity { get; set; } = 1;
-
-    private CartItem()
+    
+    
+    private ReservationItem(){}
+    
+    
+    private ReservationItem(Item item,int quantity)
     {
-    }
-
-    private CartItem(Cart cart, Item item, int quantity)
-    {
-        Cart = cart;
         Item = item;
         if (quantity <= 0) throw new DomainException("invalid_quantity", "Quantity must be greater than zero");
         Quantity = quantity;
     }
     
-    public static CartItem Create(Cart cart, Item item, int quantity) => new(cart, item,quantity);
+    public static ReservationItem Create(Item item, int quantity) => new(item,quantity);
 }
