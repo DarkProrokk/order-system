@@ -21,34 +21,25 @@ public class Item: Entity
         if(quantity <= 0) throw new DomainException("invalid_quantity", "Quantity must be greater than zero");
         Quantity = quantity;
     }
+    
+    public static Item Create(decimal price, string name, int quantity = 1) => new Item(price, name, quantity);
 
-    public Result.Result<Item> AdjustQuantity(int quantity)
+    public Result.Result ReduceStock(int quantity)
     {
-        if (Quantity - quantity < 0) return Result.Result<Item>.Failure(this, "Item out of stock");
+        if(quantity <= 0) 
+            return Result.Result.Failure("Quantity must be greater than zero");
+        if (Quantity - quantity < 0) return Result.Result.Failure("Item out of stock");
         Quantity -= quantity;
-        return Result.Result<Item>.Success();
-    }
-
-    public Result.Result<bool> ReduceStock(int quantity)
-    {
-        if(quantity < 0) 
-            throw new DomainException("invalid_quantity", "Quantity must be greater than zero");
-        if (Quantity - quantity < 0) return Result.Result<bool>.Failure("Item out of stock");
-        Quantity -= quantity;
-        return Result.Result<bool>.Success();
+        return Result.Result.Success();
     }
     
-    public Result.Result<bool> IncreaseStock(int quantity)
+    public Result.Result IncreaseStock(int quantity)
     {
-        if(quantity < 0) 
-            throw new DomainException("invalid_quantity", "Quantity must be greater than zero");
+        if(quantity <= 0) 
+            return Result.Result.Failure("Quantity must be greater than zero");
         Quantity += quantity;
-        return Result.Result<bool>.Success();
+        return Result.Result.Success();
     }
 
-    public bool CanReserve(int quntity)
-    {
-        var result = Quantity - quntity;
-        return result < 0;
-    }
+    public bool CanReserve(int quantity) => Quantity >= quantity;
 }

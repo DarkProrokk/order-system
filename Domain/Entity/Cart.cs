@@ -10,12 +10,20 @@ public class Cart: Entity
     
     public int? UserId { get; set; }
 
-    private Cart(int userId)
+    private Cart(){}
+    
+    public Cart(User user)
+    {
+        User = user;
+    }
+
+    public Cart(int userId)
     {
         UserId = userId;
     }
 
     public static Cart Create(int userId) => new Cart(userId);
+    public static Cart Create(User user) => new Cart(user);
 
     public void Add(Item item, int quantity = 1)
     {

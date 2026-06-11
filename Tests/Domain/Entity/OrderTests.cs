@@ -1,6 +1,7 @@
 using Domain.Entity;
 using Domain.Enum;
-using Xunit;
+
+namespace Tests.Domain.Entity;
 
 public class OrderTests
 {
