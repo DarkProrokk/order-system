@@ -22,8 +22,10 @@ public class CartTests
     [Fact]
     public void CrateCart_ValidWithUserId_ShouldCreate()
     {
-        
         var cart = Cart.Create(CreateUser().Id);
         Assert.Equal(CreateUser().Id, cart.UserId);
     }
+    
+    // [Fact]
+    // public void 
 }

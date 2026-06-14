@@ -28,6 +28,23 @@ public class CartItem: Entity
         if (quantity <= 0) throw new DomainException("invalid_quantity", "Quantity must be greater than zero");
         Quantity = quantity;
     }
+
+    public Result.Result ReduceStock(int quantity)
+    {
+        if(quantity <= 0) 
+            return Result.Result.Failure("Quantity must be greater than zero");
+        if (Quantity - quantity < 0) return Result.Result.Failure("Item out of stock");
+        Quantity -= quantity;
+        return Result.Result.Success();
+    }
+    
+    public Result.Result IncreaseStock(int quantity)
+    {
+        if(quantity <= 0) 
+            return Result.Result.Failure("Quantity must be greater than zero");
+        Quantity += quantity;
+        return Result.Result.Success();
+    }
     
     public static CartItem Create(Cart cart, Item item, int quantity) => new(cart, item, quantity);
     public static CartItem Create(Cart cart, int itemId, int quantity) => new(cart, itemId, quantity);

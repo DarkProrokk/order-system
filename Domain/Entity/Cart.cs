@@ -40,15 +40,10 @@ public class Cart: Entity
     public void ChangeItemQuantity(int itemId, int quantity)
     {
         if (quantity <= 0) throw new DomainException("invalid_quantity", "Quantity must be greater than zero");
-        var item = GetCartItemById(itemId);
+        CartItem item = GetCartItemById(itemId);
         item.Quantity = quantity;
     }
-
-    public void Remove(int itemId)
-    {
-        var item = GetCartItemById(itemId);
-        CartItems.Remove(item);
-    }
+    
     /// <summary>
     /// Find <see cref="CartItem"/> by <see cref="Item"/> id
     /// </summary>
@@ -57,11 +52,18 @@ public class Cart: Entity
     /// <exception cref="DomainException">Throw if item not contains in cart</exception>
     public CartItem GetCartItemById(int itemId)
     {
-        var item = CartItems.Find(item => item.ItemId == itemId);
+        CartItem item = CartItems.Find(item => item.ItemId == itemId);
         if (item == null) throw new DomainException("not_found_cart_item", $"Item with id {itemId} not found in " +
                                                                            $"cart with id : {Id}");
         return item;
     }
+
+    public void Remove(int itemId)
+    {
+        var item = GetCartItemById(itemId);
+        CartItems.Remove(item);
+    }
+    
 
     public Result.Result<bool> ValidateForOrder()
     {
